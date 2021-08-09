@@ -1,0 +1,153 @@
+﻿@using Microsoft.AspNetCore.Http;
+@using v29.Helpers
+@{
+
+}
+<!-- Header -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <title>V29 - @Html.Raw(ViewData["Title"])</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta content="" name="description" />
+    <meta content="" name="author" />
+    <!-- App favicon -->
+    @* <link rel="shortcut icon" href="public/assets/images/favicon.ico"> *@
+    <!-- hederStyle -->
+    <!-- custom Css -->
+    <link href="~/css/bootstrap.css" id="bootstrap-style" rel="stylesheet" type="text/css" />
+    <link href="~/css/icons.min.css" rel="stylesheet" type="text/css" />
+    <link href="~/fonts/sarabun/sarabun.css" rel="stylesheet" type="text/css" />
+    <link href="~/lib/customs/styleextends.min.css" rel="stylesheet" type="text/css" />
+    <link href="~/lib/customs/colors.min.css" rel="stylesheet" type="text/css" />
+    @if(ViewBag.libcss != null){
+        @foreach (var item in ViewBag.libcss)
+        {
+            <link href="~/lib/@Html.Raw(item+".css")" rel="stylesheet" type="text/css" />
+        }
+    }
+    <!-- App Css-->
+    <link href="~/css/app.min.css" id="app-style" rel="stylesheet" type="text/css" />
+    @if(ViewBag.pagecss != null){
+        @foreach (var item in ViewBag.pagecss)
+        {
+            <link href="~/css/@Html.Raw(item+".css")" rel="stylesheet" type="text/css" />
+        }
+    }
+</head>
+<body data-sidebar="light">
+
+    <!-- Begin page -->
+    <div id="layout-wrapper">
+        <!-- Topbar -->
+        <header id="page-topbar">
+            <div class="navbar-header">
+                <div class="d-flex">
+                    <!-- LOGO -->
+                    <div class="navbar-brand-box">
+                        <a asp-action="Index" asp-controller="Home" class="logo fs-28">
+                            V29
+                        </a>
+                    </div>
+                    <button type="button" class="btn btn-sm px-3 font-size-24 header-item waves-effect"
+                        id="vertical-menu-btn">
+                        <i class="mdi mdi-menu"></i>
+                    </button>
+                </div>
+                <div class="d-flex">
+                    <div class="dropdown d-inline-block">
+                        <button type="button" class="btn header-item waves-effect" id="page-header-user-dropdown"
+                            data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                            <img src="@(Startup.userd["sys_usersd_avatar"]=="noimage"?"/img/avatar-no-image.png":$"/uploads/avatars/{Startup.userd["sys_usersd_avatar"]}")" alt="user"
+                class="profile-pic" id="layoutcore-profileimg1"/>
+                            สวัสดี, <span id="topmenucore_fname0">@Startup.userd["sys_usersd_fname"]</span>
+                            <span id="topmenucore_lname0">@Startup.userd["sys_usersd_lname"]</span> <i class="mdi mdi-chevron-down"></i>
+                        </button>
+                        <div class="dropdown-menu dropdown-menu-right">
+                            <!-- item-->
+                            <a class="dropdown-item" asp-controller="Account" asp-action="Profile"><i
+                                    class="mdi mdi-account-circle font-size-17 text-muted align-middle mr-1"></i>
+                                ข้อมูลส่วนตัว</a>
+                            <div class="dropdown-divider"></div>
+                            <a class="dropdown-item text-danger" asp-controller="Account" asp-action="SignOutAc"><i
+                                    class="mdi mdi-power font-size-17 text-muted align-middle mr-1 text-danger"></i>
+                                ออกจาจกระบบ</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </header>
+        <!-- Sidebar -->
+        <!-- ========== Left Sidebar Start ========== -->
+        <div class="vertical-menu">
+            <div data-simplebar class="h-100">
+                <!--- Sidemenu -->
+                    @await Component.InvokeAsync("SidebarMenu")
+                <!-- Sidebar -->
+            </div>
+        </div>
+        <!-- Left Sidebar End -->
+        <!-- ============================================================== -->
+        <!-- Start right Content here -->
+        <!-- ============================================================== -->
+        <div class="main-content">
+            <div class="page-content">
+                <div class="container-fluid">
+                    <!-- start page title -->
+                    <div class="row">
+                        <div class="col-12">
+                            <div class="page-title-box float-right">
+                                <ol class="breadcrumb m-0">
+                                    <li class="breadcrumb-item"><a asp-controller="Home" asp-action="Index">Dashboard</a></li>
+                                @if(ViewBag.breadcrumb != null)
+                                {
+                                    @foreach (var item in ViewBag.breadcrumb)
+                                    {
+                                        if(item.Value.Length > 2){
+                                            <li class="breadcrumb-item"><a href="/@item.Value[0]/@item.Value[1]?@Html.Raw(@item.Value[2])=@Html.Raw(@item.Value[3])" class="active">@Html.Raw(item.Key)</a></li>
+                                        } else {
+                                            <li class="breadcrumb-item"><a asp-controller="@Html.Raw(@item.Value[0])" asp-action="@Html.Raw(@item.Value[1])" class="active">@Html.Raw(item.Key)</a></li>
+                                        }
+                                    }
+                                }
+                                </ol>
+                            </div>
+                        </div>
+                    </div>
+
+                    @RenderBody()
+
+
+                </div>
+                <!-- end main content-->
+            </div>
+            <!-- END layout-wrapper -->
+            <!-- FooterScript -->
+            <script src="~/lib/jquery/dist/jquery.min.js"></script>
+            <script src="~/lib/bootstrap/js/bootstrap.bundle.min.js"></script>
+            <script src="~/lib/metismenu/metisMenu.min.js"></script>
+            <script src="~/lib/simplebar/simplebar.min.js"></script>
+            <script src="~/lib/node-waves/waves.min.js"></script>
+            @if(ViewBag.libjs != null){
+                @foreach (var item in ViewBag.libjs)
+                {
+                    <script src="~/lib/@Html.Raw(item+".js")"></script>
+                }
+            }
+            <!-- App js -->
+            <script src="~/js/app.js" asp-append-version="true"></script>
+            @if(ViewBag.pagejs != null){
+                @foreach (var item in ViewBag.pagejs)
+                {
+                    <script src="~/js/@Html.Raw(item+".js")"></script>
+                }
+            }
+            <script>
+                $(function () {
+                    @await RenderSectionAsync("ReadyScripts", required: false)
+                });
+            </script>
+             @await RenderSectionAsync("Scripts", required: false)
+</body>
+</html>

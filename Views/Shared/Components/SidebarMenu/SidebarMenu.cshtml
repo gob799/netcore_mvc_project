@@ -1,0 +1,134 @@
+@using v29.Helpers;
+@{
+
+}
+<div id="sidebar-menu">
+    <!-- Left Menu Start -->
+    <ul class="metismenu list-unstyled" id="side-menu">
+        <li class="menu-title">Main Menu</li>
+        <li>
+            <a asp-controller="Home" asp-action="Index" class="waves-effect" id="sbmm-dashboard">
+                <i class="mdi mdi-view-dashboard"></i> <span>Dashboard</span>
+            </a>
+        </li>
+        <li>
+            <a href="javascript: void(0);" class="has-arrow waves-effect">
+                <i class="mdi mdi-email-outline"></i>
+                <span>-----</span>
+            </a>
+            <ul class="sub-menu" aria-expanded="false">
+                <li><a href="email-inbox.php">Inbox</a></li>
+                <li><a href="email-read.php">Email Read</a></li>
+                <li><a href="email-compose.php">Email Compose</a></li>
+            </ul>
+        </li>
+
+        @if(UserHelper.CheckPerm("21")){
+        <li>
+            <a href="javascript: void(0);" class="has-arrow waves-effect">
+                <i class="mdi mdi-cash-usd"></i>
+                <span> ระบบฝาก </span>
+            </a>
+            <ul class="sub-menu" aria-expanded="false">
+                <li><a asp-controller="Deposit" asp-action="Dep_Dashboard">Dashboard</a></li>
+                @* <li><a asp-controller="Deposit" asp-action="Dep_Transaction">รายการแจ้งฝาก</a></li> *@
+                
+                <li><a asp-controller="Deposit" asp-action="Dep_Transaction_Bank">รายการเติมเงิน</a></li>
+             </ul>
+        </li>
+        }
+        @if(UserHelper.CheckPerm("22")){
+         <li>
+            <a href="javascript: void(0);" class="has-arrow waves-effect">
+                <i class="mdi mdi-cash"></i>
+                <span> ระบบถอน </span>
+            </a>
+            <ul class="sub-menu" aria-expanded="false">
+                
+                
+                <li><a asp-controller="Withdraw" asp-action="WD_Dashboard" >Dashboard</a></li>
+                <li><a asp-controller="Withdraw" asp-action="WD_list_before" >Confirm ก่อนถอน</a></li>
+                <li><a href="javascript: void(0);" class="has-arrow">รายการหลังถอน</a>
+                    <ul class="sub-menu" aria-expanded="true">
+                        <li><a asp-controller="Withdraw" asp-action="WD_list_after">รายการ Error</a></li>
+                        <li><a href="javascript: void(0);">รายการ Completed</a></li>
+                    </ul>
+                </li>
+                @* <li><a asp-controller="Withdraw" asp-action="WD_list_before">Confirm ก่อนถอน</a></li>
+                <li><a asp-controller="Withdraw" asp-action="WD_list_after">รายการหลังถอน</a></li>
+                <li><a asp-controller="Withdraw" asp-action="">รายงาน</a></li>    *@
+            </ul>
+        </li>
+        }
+        @if(UserHelper.CheckPerm("23")){
+         
+        
+        <li>
+            <a href="javascript: void(0);" class="has-arrow waves-effect">
+                <i class="mdi mdi-settings"></i>
+                <span> ตั้งค่าระบบ </span>
+            </a>
+            <ul class="sub-menu" aria-expanded="false">
+                <li><a asp-controller="Withdraw" asp-action="Settings_amnt">ยอดขั้นต่ำ</a></li>
+                
+                  
+            </ul>
+        </li>
+
+        }
+
+        @if(UserHelper.CheckPerm("1") || UserHelper.CheckPerm("10") || UserHelper.CheckPerm("100")){
+            <li class="menu-title">ระบบหลัก</li>
+        <li>
+            <a href="javascript: void(0);" class="has-arrow waves-effect">
+                <i class="mdi mdi-account-box"></i>
+                <span> การเข้าถึงระบบ </span>
+            </a>
+            <ul class="sub-menu" aria-expanded="false">
+                @if(UserHelper.CheckPerm("100")){
+                    <li><a asp-controller="User" asp-action="UserList" id="sbmm-system-users">ผู้ใช้งานระบบ</a></li>
+                }
+                @if(UserHelper.CheckPerm("6")){
+                    <li><a asp-controller="User" asp-action="UserLogsList" id="sbmm-system-userslogs">ประวัติผู้ใช้ทำรายการ</a></li>
+                }
+                @if(UserHelper.CheckPerm("10")){
+                    <li><a asp-controller="User" asp-action="PermissionList" id="sbmm-system-permissions">สิทธิการเข้าถึง</a></li>
+                }
+                @if(UserHelper.CheckPerm("2")){
+                    <li><a asp-controller="User" asp-action="BanList" id="sbmm-system-banip">IP ที่ถูกระงับ</a></li>
+                }
+                @if(UserHelper.CheckPerm("4")){
+                    <li><a asp-controller="User" asp-action="LogsList" id="sbmm-system-logs">ประวัติการเข้าใช้</a></li>
+                }
+            </ul>
+        </li>
+        }
+        <li>
+            <a href="javascript: void(0);" class="has-arrow waves-effect">
+                <i class="mdi mdi-account"></i>
+                <span> ข้อมูลส่วนตัว </span>
+            </a>
+            <ul class="sub-menu" aria-expanded="false">
+                <li><a asp-controller="Account" asp-action="Profile" id="sbmm-account-profile">ข้อมูลส่วนตัว</a></li>
+                <li><a asp-controller="Account" asp-action="SignOutAc" class="red-700">ออกจากระบบ</a></li>
+            </ul>
+        </li>
+        @*
+        <li>
+            <a href="javascript: void(0);" class="has-arrow waves-effect">
+                <i class="mdi mdi-share-variant"></i>
+                <span>Multi Level</span>
+            </a>
+            <ul class="sub-menu" aria-expanded="true">
+                <li><a href="javascript: void(0);">Level 1.1</a></li>
+                <li><a href="javascript: void(0);" class="has-arrow">Level 1.2</a>
+                    <ul class="sub-menu" aria-expanded="true">
+                        <li><a href="javascript: void(0);">Level 2.1</a></li>
+                        <li><a href="javascript: void(0);">Level 2.2</a></li>
+                    </ul>
+                </li>
+            </ul>
+        </li>
+        *@
+    </ul>
+</div>

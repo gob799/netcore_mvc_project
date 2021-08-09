@@ -1,0 +1,78 @@
+@using System;
+@{
+    Layout = null;
+
+    if(ViewData["Type"]?.ToString() == String.Empty || ViewData["Type"]?.ToString() == null)
+        ViewData["Type"] = "error";
+    if(ViewData["Type"].ToString() == "success"){
+        ViewData["Title"] = "สำเร็จ!";
+        ViewData["Btncolor"] = "info";
+        ViewData["Textcolor"] = "blue-800";
+        ViewData["redirect"] = "true";
+        ViewData["Text"] = "ดำเนินการเสร็จสิ้น ระบบจะย้ายท่านไปใน <span id='CountDownLabel'>5</span> วินาทีหรือคลิกด้านล่าง";
+        ViewData["redirect"] = "yes";
+    } else {
+        ViewData["Title"] = "ผิดพลาด!";
+        ViewData["Btncolor"] = "danger";
+        ViewData["Textcolor"] = "red-800";
+        ViewData["redirect"] = "false";
+    }
+    if(ViewData["Backpage"]?.ToString() == String.Empty || ViewData["Backpage"]?.ToString() == null)
+        ViewData["Backpage"] = "javascript:history.back();";
+
+}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+        <title>ช้อผิดพลาด - @Html.Raw(ViewData["Title"])</title>
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <meta content="" name="description" />
+        <meta content="" name="author" />
+        <!-- custom Css -->
+        <link href="~/css/bootstrap.css" id="bootstrap-style" rel="stylesheet" type="text/css" />
+        <link href="~/css/icons.min.css" rel="stylesheet" type="text/css" />
+        <link href="~/fonts/sarabun/sarabun.css" rel="stylesheet" type="text/css" />
+        <link href="~/lib/customs/styleextends.min.css" rel="stylesheet" type="text/css" />
+        <link href="~/lib/customs/colors.min.css" rel="stylesheet" type="text/css" />
+    </head>
+    <body>
+        <div class="account-pages my-5 pt-sm-5">
+            <div class="container">
+                <div class="row justify-content-center">
+                    <div class="col-md-8 col-lg-6 col-xl-5">
+                        <div class="card overflow-hidden">
+                            <div class="card-body pt-0">
+                                <div class="ex-page-content text-center">
+                                    <h3 class="text-dark p-2">@Html.Raw(@ViewData["Title"])</h3>
+                                    <p class="p-3 @ViewData["Textcolor"]">@Html.Raw(ViewData["Text"])</p>
+                                    <a class="btn btn-@ViewData["Btncolor"] mb-1 waves-effect waves-light" href="@Html.Raw(@ViewData["Backpage"])"><i class="mdi mdi-arrow-left"></i> ย้อนกลับ</a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- JAVASCRIPT -->
+        <script src="~/lib/jquery/dist/jquery.min.js"></script>
+        <script src="~/lib/bootstrap/js/bootstrap.bundle.min.js"></script>
+        <script type="text/javascript">
+            function RedirectAfterDelayFn() {
+                var seconds = 3;
+                var lblCount = document.getElementById("CountDownLabel");
+                lblCount.innerHTML = seconds;
+                setInterval(function () {
+                    seconds--;
+                    lblCount.innerHTML = seconds;
+                    if (seconds == 0) {
+                        window.location = "@Html.Raw(@ViewData["Backpage"])";
+                    }
+                }, 1000);
+            }
+            @if(ViewData["redirect"].ToString() == "yes"){ @Html.Raw("RedirectAfterDelayFn();") }
+        </script>
+    </body>
+</html>

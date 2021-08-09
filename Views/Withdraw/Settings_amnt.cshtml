@@ -1,0 +1,172 @@
+
+@* @using v29.Models  
+@model v29.Models.WithdrawModel  *@
+@* @model IEnumerable<WithdrawModel> *@
+
+
+
+
+
+@{
+    ViewData["Title"] = "Setting";
+    
+}
+<h1>@ViewData["Title"]</h1>
+
+@* @section Styles{ 
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css"> 
+  <link rel="stylesheet" href="https://cdn.datatables.net/1.10.23/css/dataTables.bootstrap.min.css"> 
+
+
+} *@
+@section scripts {
+
+  
+
+
+@* <h3>Id: @Model.ResultCode</h3>  *@
+
+
+
+<script type="text/javascript">
+
+    $(document).ready(function(){
+
+       
+          /* $('#withdraw-tab a').on('click', function (e) {
+            e.preventDefault()
+            $(this).tab('show')
+          });
+
+          // store the currently selected tab in the hash value
+          $("ul.nav-tabs > li > a").on("shown.bs.tab", function(e) {
+            var id = $(e.target).attr("href").substr(1);
+            window.location.hash = id;
+          });
+
+          // on load of the page: switch to the currently selected tab
+          var hash = window.location.hash;
+          $('#withdraw-tab a[href="' + hash + '"]').tab('show'); */
+
+         
+          $('#dtData').DataTable({
+                  "pagingType": "simple" // "simple" option for 'Previous' and 'Next' buttons only
+                });
+                $('.dataTables_length').addClass('bs-select');
+
+          
+    });
+
+    function reloadpage(){
+        location.reload();
+    }
+    
+     function actionButton(wtdid,trancode,action_id){
+
+          var txtMsg = "";
+          
+
+          if (action_id == 1){ // Auto
+             txtMsg = "Are you sure?\nส่งไปถอน Auto รายการ ";
+             
+          }else  if (action_id == 2){ // Manual
+             txtMsg = "Are you sure?\nส่งไปทำ Manual รายการ ";
+             
+          }else  if (action_id == 9){ // Cancel
+             txtMsg = "Are you sure?\nส่งไปทำ Cancel รายการ ";
+             
+          }
+          var r = confirm(txtMsg+trancode);
+
+          if (r == true) {
+           
+            
+            $.ajax({
+                  url: '/Confirm_Action',
+                  method:'POST',
+                  data: { 
+                      'wtd_id' : wtdid,
+                      'action_id' : action_id
+
+                  },          
+                          
+                  success:function(response)
+                  {            
+                    
+                      //alert(response);
+                      var result = JSON.parse(response);
+                      
+                      if (result.ResultCode == 1) {
+                       
+                        alert(result.ResultMsg);
+                        window.location.reload(true);
+                      } 
+                      else {
+                          
+                          alert(result.ResultMsg);
+                      }                        
+                  }
+              });   
+           
+          } 
+      }
+
+      
+
+</script>
+
+}
+
+</br></br>
+    
+<div class="table-responsive">  
+     <div class="container-fluid">
+
+<div class="panel panel-default border p-2">
+          <div class="panel-body">
+            <div class="container-fluid">
+            
+              <form method="post" action="<?=$this->startAppLink()?>/?p=users/form_settings_upd" id="myForm">
+                <div class="row">
+                  <div class="col-xs-12 col-md-4">
+                    <div class="form-group">
+                      <label for="txt_wtd_min_amount">ยอดถอนขั้นต่ำ</label>
+                      <input type="number" min="0" max="1000000"
+                        class="form-control" name="wtd_min_amt" id="wtd_min_amt" placeholder="" value="0" required>
+                        <!-- <div class="invalid-feedback">กรุณากรอก</div> -->
+                    </div>
+                    <div class="form-group">
+                      <label for="txt_wtd_max_amount">ยอดถอนสูงสุด</label>
+                      <input type="number" min="0" max="1000000"
+                        class="form-control" name="wtd_max_amt" id="wtd_max_amt" placeholder="" value="1000" required>
+                        
+                    </div>
+                   
+                  </div>
+                 
+                </div>
+                <div class="row">
+                  <div class="col">
+                      <div class="form-group mt-2">
+                        <div>
+                            <button type="button" class="btn btn-success btn-round" id="btnSave">บันทึก</button>
+                        </div>
+                      </div>
+                    </div>
+                </div>
+              </form>
+
+            </div>
+          </div>
+        </div>
+    <!-- End Page -->
+        </div> 
+   
+  </div> 
+
+
+
+
+
+
+

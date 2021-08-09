@@ -1,0 +1,224 @@
+@using v29.Helpers;
+@using v29.Models;
+@using Newtonsoft.Json;
+@using JM.LinqFaster;
+@{
+    ViewData["Title"] ="เพิ่มสิทธิการเข้าถึง";
+    Dictionary<string, dynamic> breadcrumb = new Dictionary<string, dynamic>();
+    breadcrumb.Add("สิทธิการเข้าถึง", new string[]{"User" ,"PermissionList"});
+    breadcrumb.Add("เพิ่มสิทธิการเข้าถึง", new string[]{"User" ,"PermissionInsert"});
+    ViewBag.breadcrumb = breadcrumb;
+    ViewBag.libcss = new string[]{
+        "datatables/datatables.min",
+        "sweetalert/sweetalert2.min"
+    };
+    ViewBag.libjs = new string[]{
+        "datatables/datatables.min",
+        "sweetalert/sweetalert2.min"
+    };
+    //ViewBag.pagecss =  new string[]{""};
+    //ViewBag.pagejs =  new string[]{"userlist"};
+    var userd = Startup.userd;
+    var permlist = PermissionsIHelp.PermList();
+    List<PermissionModel> permlistHead = new List<PermissionModel>();
+    for (int i = 0; i < permlist.Count; i++)
+    {
+        if(permlist[i].headid == "0")
+            permlistHead.Add(permlist[i]);
+    }
+}
+<div class="row">
+    <div class="col-12">
+        <div class="card">
+            <div class="card-body">
+            <div class="row clearfix">
+                <div class="col-sm-12 text-lg-right">
+                    <a asp-action="PermissionList" asp-controller="User" class="btn btn-danger btn-sm" data-toggle="tooltip" data-original-title="ย้อนกลับ"><i class="fa fa-angle-left"></i>
+                    <span>ย้อนกลับ</span></a>
+                </div>
+                <hr>
+                <div class="col-12">
+                    <form method="post" action="/User/PermissionAc?ac=insert" id="myForm">
+                        <div class="row">
+                        <div class="col-12">
+                            <div class="form-group">
+                            <label for="txt_name">ชื่อ</label>
+                            <input type="text" class="form-control" name="txt_name" id="txt_name" placeholder="ชื่อ" value="" required>
+                            <div class="invalid-feedback">กรุณาใส่ชื่อ</div>
+                            </div>
+                        </div>
+                        </div>
+                        <div class="row">
+                        <div class="col-12">
+                        <div class="alert alert-danger p-2 m-0 rounded-0" role="alert">
+                            <strong class="fs-22">เลื่อนแถบด้านล่างเพื่อดูสิทธิ  ---></strong>
+                        </div>
+                        <div class="container-fluid permissions-group border p-2 mb-2">
+                            <div class="row text-center flex-nowrap" style="overflow: scroll;overflow-y:hidden;">
+                            @for (int i = 0; i < permlistHead.Count; i++)
+                            {
+                                    <div class="col-12 col-sm-3">
+                                        <table class="table table-bordered table-sm">
+                                            <thead class="thead-light">
+                                                <tr>
+                                                    <th class="text-left">
+                                                        <div class="form-check form-check-inline">
+                                                            <label class="form-check-label">
+                                                                <input class="form-check-input headperm" type="checkbox" name="perm[]" data-headid="@permlistHead[i].pid" value="@permlistHead[i].pid">@permlistHead[i].pname
+                                                            </label>
+                                                        </div>
+                                                    </th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                @for (int x = 0; x < permlist.Count; x++)
+                                                {
+                                                    if(permlist[x].headid == permlistHead[i].pid){
+                                                        <tr>
+                                                            <td class="text-left">
+                                                                <div class="form-check form-check-inline">
+                                                                    <label class="form-check-label">
+                                                                        <input class="form-check-input subperm" type="checkbox" name="perm[]" data-pid="@permlistHead[i].pid" data-mid="@permlist[x].pid" data-cid="@permlist[x].inherid" value="@permlist[x].pid"> @permlist[x].pname
+                                                                    </label>
+                                                                </div>
+                                                            </td>
+                                                        </tr>
+                                                    }
+                                                }
+                                            </tbody>
+                                            <tfoot>
+                                                <tr>
+                                                    <td>
+                                                        <div class="form-check form-check-inline">
+                                                            <label class="form-check-label">
+                                                                <input class="form-check-input btnSelectall" type="checkbox" data-slid="@permlistHead[i].pid"> เลือกทั้งหมด
+                                                            </label>
+                                                        </div>
+                                                    </td>
+                                                </tr>
+                                            </tfoot>
+                                        </table>
+                                    </div>
+                            }
+                            </div>
+                        </div>
+                        </div>
+                        </div>
+                        <div class="row">
+                        <div class="col">
+                            <div class="form-group">
+                                <div>
+                                    <button type="button" class="btn btn-success btn-round" id="btnSubmit">บันทึก</button>
+                                </div>
+                            </div>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+@section ReadyScripts
+{
+    setSidebar("sbmm-system-permissions");
+    checkrowinit();
+}
+@section Scripts
+{
+    <script>
+        $('.headperm').each(function() {
+        $(this).click(function () {
+            if(!$(this).is(':checked')){
+                $('input[data-pid='+$(this).data('headid')+']').prop('checked', false);
+                $('input[data-slid='+$(this).data('headid')+']').prop('checked', false);
+            }
+            var countsub = 0;
+            $('input[data-pid='+$(this).data('headid')+']').each(function (index, element) {
+                if($(this).is(':checked')){
+                    countsub++;
+                }
+            });
+            if(countsub == 0){
+                $('input[data-headid='+$(this).data('headid')+']').prop('checked', false);
+            }
+        });
+    });
+    $('.subperm').each(function() {
+        $(this).click(function () {
+            if($(this).is(':checked')){
+                $('input[data-headid='+$(this).data('pid')+']').prop('checked', true);
+            } else {
+                if($(this).data('cid') == ''){
+                    $('input[data-cid='+$(this).data('mid')+']').each(function (index, element) {
+                        $(this).prop('checked', false);
+                    });
+                }
+                var countsub = 0;
+                $('input[data-pid='+$(this).data('pid')+']').each(function (index, element) {
+                    if($(this).is(':checked')){
+                        countsub++;
+                    }
+                });
+                if(countsub == 0){
+                    $('input[data-headid='+$(this).data('pid')+']').prop('checked', false);
+                }
+            }
+            if($(this).data('cid') != ''){
+                $('input[data-mid='+$(this).data('cid')+']').prop('checked', true);
+            }
+            checkRowSelec($(this).data('pid'));
+        });
+     });
+    $('.btnSelectall').click(function () {
+        if($(this).is(':checked')){
+            $('input[data-pid='+$(this).data('slid')+']').prop('checked', true);
+            $('input[data-headid='+$(this).data('slid')+']').prop('checked', true);
+        } else {
+            $('input[data-pid='+$(this).data('slid')+']').prop('checked', false);
+            $('input[data-headid='+$(this).data('slid')+']').prop('checked', false);
+        }
+    });
+    function checkRowSelec(pid){
+        var countAll = $('input[data-pid='+pid+']').length;
+        var countSubitemchecked = $('input[data-pid='+pid+']:checked').length;
+        if(countAll != countSubitemchecked){
+            $('input[data-slid='+pid+']').prop('checked', false);
+        } else {
+            $('input[data-slid='+pid+']').prop('checked', true);
+        }
+    }
+    function checkrowinit(){
+        $('.headperm').each(function() {
+            var pid = $(this).data('headid');
+            var countAll = $('input[data-pid='+pid+']').length;
+            var countSubitemchecked = $('input[data-pid='+pid+']:checked').length;
+            if(countAll == countSubitemchecked){
+                $('input[data-slid='+pid+']').prop('checked', true);
+            }
+        });
+    }
+    $('#btnSubmit').click(function(event) {
+      var form = $('#myForm');
+      if (form[0].checkValidity() === false) {
+        event.preventDefault();
+        event.stopPropagation();
+      }
+      form.addClass('was-validated');
+      if (form[0].checkValidity() === true) {
+        form[0].submit();
+      }
+    });
+    $('#btnSubmit2').click(function(event) {
+        var form = $('#myForm');
+        if (form[0].checkValidity() === false) {
+          event.preventDefault();
+          event.stopPropagation();
+        }
+        form.addClass('was-validated');
+        if (form[0].checkValidity() === true) {
+          form[0].submit();
+        }
+      });
+    </script>
+}

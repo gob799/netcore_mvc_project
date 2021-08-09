@@ -1,0 +1,217 @@
+@{
+ViewData["Title"] ="ข้อมูลส่วนตัว";
+Dictionary<string, dynamic> breadcrumb = new Dictionary<string, dynamic>();
+        breadcrumb.Add("ข้อมูลส่วนตัว", new string[]{"Account" ,"Profile"});
+        ViewBag.breadcrumb = breadcrumb;
+        ViewBag.Readyjs = @"";
+        ViewBag.libcss = new string[]{
+            "x-editable/dist/bootstrap3-editable/css/bootstrap-editable",
+            "cropperjs/cropper.min",
+            "sweetalert/sweetalert2.min"
+        };
+         ViewBag.libjs = new string[]{
+            "moment/moment",
+            "x-editable/dist/bootstrap3-editable/js/bootstrap-editable",
+            "cropperjs/cropper.min",
+            "sweetalert/sweetalert2.all.min",
+            "jquery-validation/jquery.validate",
+            "jquery-validation/additional-methods",
+        };
+        //ViewBag.pagecss =  new string[]{""};
+        ViewBag.pagejs =  new string[]{"profile"};
+        //ViewBag.Customjs = @"";
+        var userd = Startup.userd;
+}
+        <div class="row">
+            <div class="col-md-3">
+                <div class="card">
+                    <div class="card-body d-flex flex-column w-100 justify-content-center align-content-center">
+                        <h4 class="box-title">ภาพโปรไฟล์</h4>
+                        <hr class="m-t-0 m-b-30">
+                        @if(userd["sys_usersd_avatar"] == "noimage"){
+                        <img src="/img/avatar-no-image.png" alt="" width="160" class="align-self-center"
+                            id="avatarshow">
+                        } else {
+                        <img src="/uploads/avatars/@userd["sys_usersd_avatar"]" alt="" width="160"
+                            class="align-self-center" id="avatarshow">
+                        }
+
+                        <div class="mt-2 align-self-center" style="width:160px;">
+                            <label class="label p-0 m-0" data-toggle="tooltip" title="อัพโหลดภาพ">
+                                <span class="btn btn-info btn-sm" id="uploadavatar">อัพโหลดภาพ</span>
+                                <input type="file" class="sr-only" id="inputavatar" name="image" accept="image/*">
+                            </label>
+                            @if(userd["sys_usersd_avatar"] != "noimage"){
+                            <a href="javascript:void(0);" id="deleteavatar" class="btn btn-danger btn-sm"
+                                data-toggle="tooltip" title="ลบภาพ">ลบภาพ</a>
+                            }
+                            <div class="progress d-none">
+                                <div class="progress-bar progress-bar-striped progress-bar-animated" role="progressbar"
+                                    aria-valuenow="0" aria-valuemin="0" aria-valuemax="100">0%</div>
+                            </div>
+                            <div class="alert p-0 m-0 text-center" id="alertavatar" role="alert"></div>
+                            <div class="modal fade" id="modalavatar" tabindex="-1" role="dialog"
+                                aria-labelledby="modalLabel" aria-hidden="true">
+                                <div class="modal-dialog" role="document">
+                                    <div class="modal-content">
+                                        <div class="modal-header">
+                                            <h5 class="modal-title" id="modalLabel">ปรับแต่งภาพ</h5>
+                                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                                <span aria-hidden="true">&times;</span>
+                                            </button>
+                                        </div>
+                                        <div class="modal-body">
+                                            <div class="img-container" style="max-height: 60vh;">
+                                                <img id="imageavatar" src="/img/avatar-no-image.png">
+                                            </div>
+                                        </div>
+                                        <div class="modal-footer">
+                                            <button type="button" class="btn btn-secondary"
+                                                data-dismiss="modal">ยกเลิก</button>
+                                            <button type="button" class="btn btn-primary" id="crop">อัพโหลด</button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-9">
+                <div class="card">
+                    <div class="card-body">
+                        <form class="form-horizontal" role="form" action="#" id="myForm">
+                            <div class="form-body">
+                                <h4 class="box-title">รายละเอียดส่วนบุคคล</h4>
+                                <hr class="m-t-0 m-b-40">
+                                <div class="row">
+                                    <div class="col-md-6">
+                                        <div class="form-group mb-2 row">
+                                            <label class="control-label text-md-right col-md-4">ชื่อผู้ใช้:</label>
+                                            <div class="col-md-8">
+                                                <p class="form-control-static"> @userd["sys_users_username"] </p>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <!--/span-->
+                                    <div class="col-md-6">
+                                        <div class="form-group mb-2 row">
+                                            <label class="control-label text-md-right col-md-4">สิทธิการใช้งาน:</label>
+                                            <div class="col-md-8">
+                                                <p class="form-control-static"> @userd["sys_groups_title"] </p>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <!--/span-->
+                                </div>
+                                <!--/row-->
+                                <div class="row">
+                                    <div class="col-md-6">
+                                        <div class="form-group mb-2 row">
+                                            <label class="control-label text-right col-md-4">เพศ:</label>
+                                            <div class="col-md-8">
+                                                <p class="form-control-static"> <a href="javascript:void(0);"
+                                                        id="inline-sex" data-type="select" data-pk="1"
+                                                        data-value="@userd["sys_usersd_gender"]"
+                                                        data-title="ระบุเพศ"></a> </p>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <!--/span-->
+                                    <div class="col-md-6">
+                                        <div class="form-group mb-3 row">
+                                            <label class="control-label text-right col-md-4">วันเกิด:</label>
+                                            <div class="col-md-8">
+                                                @if(@userd["sys_usersd_birth"] == null){
+                                                        DateTime now = DateTime.Now;
+                                                        userd["sys_usersd_birth"] = (int.Parse(now.ToString("Y"))+533)+"-02-14";
+                                                } else {
+                                                    DateTime reset_year = Convert.ToDateTime(userd["sys_usersd_birth"].ToString());
+                                                    userd["sys_usersd_birth"] = (reset_year.Year+543)+""+reset_year.ToString("-MM-dd");
+                                                }
+                                                <p class="form-control-static"><a href="javascript:void(0);"
+                                                        id="inline-dob" data-type="combodate"
+                                                        data-value="@userd["sys_usersd_birth"]"
+                                                        data-format="YYYY-MM-DD" data-viewformat="DD/MM/YYYY"
+                                                        data-template="D / MM / YYYY" data-pk="1"
+                                                        data-title="ระบุวันเกิด"></a></p>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <!--/span-->
+                                </div>
+                                <!--/row-->
+                                <div class="row">
+                                    <div class="col-md-6">
+                                        <div class="form-group mb-3 row">
+                                            <label class="control-label text-right col-md-4">ชื่อ-นามสกุล:</label>
+                                            <div class="col-md-8">
+                                                <a href="javascript:void(0);" id="inline-fname" data-type="text"
+                                                    data-pk="1" data-value="@userd["sys_usersd_fname"]"
+                                                    data-title="ไม่ระบุ"></a>   
+                                                <a href="javascript:void(0);" id="inline-lname" data-type="text"
+                                                    data-pk="1" data-value="@userd["sys_usersd_lname"]"
+                                                    data-title="ไม่ระบุ"></a>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <!--/row-->
+                                <h3 class="box-title">รหัสผ่าน</h3>
+                                <hr class="m-t-0 m-b-40">
+                                <div class="row">
+                                    <!--/span-->
+                                    <div class="col-md-6">
+                                        <div class="form-group mb-3 row">
+                                            <label
+                                                class="control-label text-right col-md-4 pt-md-1">รหัสผ่านใหม่:</label>
+                                            <div class="col-md-8">
+                                                <input type="password" autocomplete="off"
+                                                    class="form-control form-control-sm" name="" id="txt_password"
+                                                    minlength="4" placeholder="" required>
+                                                <div class="invalid-feedback">กรุณากรอกรหัสผ่านอย่างน้อย 4 ตัวอักษร
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <!--/span-->
+                                </div>
+                                <!--/row-->
+                                <div class="row">
+                                    <div class="col-md-6">
+                                        <div class="form-group mb-3 row">
+                                            <label
+                                                class="control-label text-right col-md-4 pt-md-1">รหัสผ่านใหม่อีกครั้ง:</label>
+                                            <div class="col-md-8">
+                                                <input type="password" autocomplete="off"
+                                                    class="form-control form-control-sm" name="" id="txt_re_password"
+                                                    minlength="4" placeholder="" required>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <!--/span-->
+                                </div>
+                            </div>
+                            <div class="form-actions">
+                                <div class="row">
+                                    <div class="col-md-6">
+                                        <div class="row">
+                                            <div class="offset-md-4 col-md-8">
+                                                <button type="submit" class="btn btn-info btn-sm" id="btnSubmit"> <i
+                                                        class="fa fa-pencil"></i> เปลี่ยนรหัสผ่าน</button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6"> </div>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+@section ReadyScripts
+{
+    setSidebar("sbmm-account-profile");
+}

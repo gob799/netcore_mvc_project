@@ -1,0 +1,26 @@
+﻿* {
+    outline: none !important;
+}
+.accountbg {
+    background: #4e4e4e;
+    position: absolute;
+    background-size: cover;
+    height: 100%;
+    width: 100%;
+    top: 0;
+}
+.wrapper-page {
+    margin: auto auto;
+    max-width: 440px;
+    height:  100%;
+}
+.wrapper-page > .card {
+    border-radius: .5rem;
+}
+.vertical-center {
+    min-height: 100%;  /* Fallback for browsers do NOT support vh unit */
+    min-height: 100vh; /* These two lines are counted as one :-)       */
+
+    display: flex;
+    align-items: center;
+}

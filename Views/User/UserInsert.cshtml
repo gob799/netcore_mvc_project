@@ -1,0 +1,180 @@
+@using v29.Helpers;
+@using v29.Models;
+@using Newtonsoft.Json;
+@using JM.LinqFaster;
+@{
+    ViewData["Title"] ="เพิ่มผู้ใช้งานระบบ";
+    Dictionary<string, dynamic> breadcrumb = new Dictionary<string, dynamic>();
+    breadcrumb.Add("ผู้ใช้งานระบบ", new string[]{"User" ,"UserList"});
+    breadcrumb.Add("เพิ่มผู้ใช้งานระบบ", new string[]{"User" ,"UserInsert"});
+    ViewBag.breadcrumb = breadcrumb;
+    ViewBag.libcss = new string[]{
+        "bootstrap-datepicker/bootstrap-datepicker.min",
+        "sweetalert/sweetalert2.min"
+    };
+    ViewBag.libjs = new string[]{
+        "bootstrap-datepicker/bootstrap-datepicker.min",
+        "bootstrap-datepicker/bootstrap-datepicker.thai.min",
+        "bootstrap-datepicker/bootstrap-datepicker.th.min",
+        "sweetalert/sweetalert2.min"
+    };
+    //ViewBag.pagecss =  new string[]{""};
+    //ViewBag.pagejs =  new string[]{"userlist"};
+    var userd = Startup.userd;
+    DateTime today = DateTime.Now;
+    var grouplist = PermissionsIHelp.GetListDropdown();
+}
+<div class="row">
+    <div class="col-12">
+        <div class="card">
+            <div class="card-body">
+            <div class="row clearfix">
+                <div class="col-sm-12 text-lg-right">
+                    <a asp-action="UserList" asp-controller="User" class="btn btn-danger btn-sm" data-toggle="tooltip" data-original-title="ย้อนกลับ"><i class="fa fa-angle-left"></i>
+                    <span>ย้อนกลับ</span></a>
+                </div>
+                <hr>
+                <div class="col-12">
+                    <form method="post" action="/User/UserListAc?ac=insert" id="myForm">
+                  <div class="row p-t-0">
+                    <div class="col-md-6">
+                        <div class="form-group mb-2">
+                            <label class="control-label">ชื่อ</label>
+                            <input type="text" class="form-control form-control-sm" name="txt_fname" id="txt_fname" placeholder="" value="" required>
+                            <div class="invalid-feedback">กรุณากรอก</div>
+                        </div>
+                  </div>
+                  <!--/span-->
+                    <div class="col-md-6">
+                        <div class="form-group mb-2">
+                            <label class="control-label">นามสกุล</label>
+                            <input type="text" class="form-control form-control-sm" name="txt_lname" id="txt_lname" placeholder="" value="" required>
+                            <div class="invalid-feedback">กรุณากรอก</div>
+                        </div>
+                    </div>
+                  <!--/span-->
+                 </div>
+                 <div class="row p-t-0">
+                    <div class="col-md-6">
+                        <div class="form-group mb-2">
+                            <label class="control-label">เพศ</label>
+                            <select class="custom-select custom-select-sm" name="select_gender" id="select_gender" minlength="1" required>
+                              <option value="0">ไม่ระบุ</option>
+                              <option value="1">ชาย</option>
+                              <option value="2">หญิง</option>
+                            </select>
+                            <div class="invalid-feedback">กรุณาเลือก</div>
+                        </div>
+                  </div>
+                  <!--/span-->
+                    <div class="col-md-6">
+                        <div class="form-group mb-2">
+                            <label class="control-label">วันเกิด</label>
+                            @{
+                                var outDate = int.Parse(today.AddYears(-18).ToString("yyyy")) < 2400?int.Parse(today.AddYears(-18).ToString("yyyy"))+543:int.Parse(today.AddYears(-18).ToString("yyyy"));
+                                var outDatev = outDate + "" + today.ToString("-MM-dd");
+                            }
+                            <input type="text" class="form-control form-control-sm mydatepicker bg-white" data-fotmat="YYYY-MM-DD" name="select_dob" id="select_dob" value="@outDatev" readonly="readonly">
+                            <div class="invalid-feedback">กรุณากรอก</div>
+                        </div>
+                    </div>
+                  <!--/span-->
+                 </div>
+                 <hr class="clearfix my-2">
+                 <div class="row p-t-0">
+                    <div class="col-md-6">
+                        <div class="form-group mb-2">
+                            <label class="control-label">ชื่อผู้ใช้</label>
+                            <input type="text" class="form-control form-control-sm" name="txt_username" id="txt_username" placeholder="" value="" required>
+                            <div class="invalid-feedback">กรุณากรอก</div>
+                        </div>
+                  </div>
+                  <!--/span-->
+                    <div class="col-md-6">
+                        <div class="form-group mb-2">
+                            <label class="control-label">สิทธิการใช้งาน</label>
+                            <select class="custom-select custom-select-sm" name="select_groupid" id="" minlength="1" required>
+                              <option value="" selected>----- กรุณาเลือก -----</option>
+                              @for (int i = 0; i < grouplist.Rows.Count; i++)
+                              {
+                                    <option value="@grouplist.Rows[i]["sys_groups_id"]">@grouplist.Rows[i]["sys_groups_title"]</option>
+                              }
+                            </select>
+                            <div class="invalid-feedback">กรุณาเลือก</div>
+                        </div>
+                    </div>
+                  <!--/span-->
+                 </div>
+                 <div class="row p-t-0">
+                    <div class="col-md-6">
+                        <div class="form-group mb-2">
+                            <label class="control-label">รหัสผ่าน</label>
+                            <input type="password" class="form-control form-control-sm" name="txt_password" id="txt_password" autocomplete="off" required>
+                            <div class="invalid-feedback">กรุณากรอก</div>
+                        </div>
+                  </div>
+                  <!--/span-->
+                    <div class="col-md-6">
+                        <div class="form-group mb-2">
+                            <label class="control-label">รหัสผ่านอีกครั้ง</label>
+                            <input type="password" class="form-control form-control-sm" name="txt_repassword" id="txt_repassword" autocomplete="off" required>
+                            <div class="invalid-feedback .repassword-invalid-feedback1">รหัสผ่านไม่ตรงกัน</div>
+                        </div>
+                    </div>
+                  <!--/span-->
+                 </div>
+                 <div class="row">
+                  <div class="col">
+                      <div class="form-group mt-2">
+                        <div>
+                            <button type="button" class="btn btn-success btn-sm" data-toggle="tooltip" data-original-title="เพิ่มใหม่" id="btnSubmit">เพิ่มใหม่</button>
+                            <a href="/User/UserList" class="btn btn-secondary btn-sm" data-toggle="tooltip" data-original-title="ยกเลิก">ยกเลิก</a>
+
+                        </div>
+                      </div>
+                    </div>
+                </div>
+          </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+@section ReadyScripts
+{
+    setSidebar("sbmm-system-users");
+    $('#select_dob').datepicker({
+        showDropdowns: true,
+        autoclose: true,
+        format: 'yyyy-mm-dd',
+        language: "th-th",
+        todayHighlight: true,
+        startView: 3,
+        orientation: "bottom auto"
+    });
+}
+@section Scripts
+{
+    <script>
+    $('#btnSubmit').click(function(event) {
+      var form = $('#myForm');
+      var password = $('input[name=txt_password]').val();
+      var repassword = $('input[name=txt_repassword]').val();
+      if(password != repassword){
+        if (form[0].checkValidity() === false) {
+          event.preventDefault();
+          event.stopPropagation();
+        }
+        $('input[name=txt_repassword]').addClass('is-invalid');
+        $('.repassword-invalid-feedback1').html('รหัสผ่านไม่ตรงกัน');
+        event.preventDefault();
+        event.stopPropagation();
+      } else {
+        form.addClass('was-validated');
+        if (form[0].checkValidity() === true) {
+            form[0].submit();
+        }
+      }
+    });
+    </script>
+}

@@ -1,0 +1,180 @@
+@* @model IEnumerable<WithdrawModel> *@
+@{
+    ViewData["Title"] = "Withdraw - Dashboard";
+    
+}
+<h1>@ViewData["Title"]</h1>
+
+
+@section scripts {
+<script type="text/javascript">
+
+    $(document).ready(function(){
+
+       
+          $('#withdraw-tab a').on('click', function (e) {
+            e.preventDefault()
+            $(this).tab('show')
+          });
+
+          // store the currently selected tab in the hash value
+          $("ul.nav-tabs > li > a").on("shown.bs.tab", function(e) {
+            var id = $(e.target).attr("href").substr(1);
+            window.location.hash = id;
+          });
+
+          // on load of the page: switch to the currently selected tab
+          var hash = window.location.hash;
+          $('#withdraw-tab a[href="' + hash + '"]').tab('show');
+           });
+
+    function reloadpage(){
+        location.reload();
+    }
+
+</script>
+
+}
+
+</br></br>
+    
+<!-- ============================================================== -->
+<!-- Bread crumb and right sidebar toggle -->
+<!-- ============================================================== -->
+@* <div class="page-breadcrumb">
+    <div class="row">
+        <div class="col-5 align-self-center">
+            <h4 class="page-title">Dashboard</h4>
+            <div class="d-flex align-items-center">
+
+            </div>
+        </div>
+        <div class="col-7 align-self-center">
+            <div class="d-flex no-block justify-content-end align-items-center">
+                <nav aria-label="breadcrumb">
+                    <ol class="breadcrumb">
+                        <li class="breadcrumb-item active">
+                            <a href="/">Dashboard</a>
+                        </li>
+                    </ol>
+                </nav>
+            </div>
+        </div>
+    </div>
+</div> *@
+<!-- ============================================================== -->
+<!-- End Bread crumb and right sidebar toggle -->
+<!-- ============================================================== -->
+<!-- ============================================================== -->
+<!-- Container fluid  -->
+<!-- ============================================================== -->
+<div class="container-fluid">
+                <!-- ============================================================== -->
+                <!-- Info box -->
+                <!-- ============================================================== -->
+                <div class="card-group">
+                    <!-- Card -->
+                    <div class="card">
+                        <div class="card-body">
+                            <div class="d-flex align-items-center">
+                                <div class="m-r-10">
+                                    <span class="btn btn-circle btn-lg bg-info">
+                                        <i class="ti-wallet text-white"></i>
+                                    </span>
+                                </div>
+                                <div>
+                                    รายการถอนวันนี้
+                                </div>
+                                <div class="ml-auto">
+                                    <h4 class="m-b-0 font-light"><span id="tasktoday">0</span></h4>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- Card -->
+                    <!-- Card -->
+                    <div class="card">
+                        <div class="card-body">
+                            <div class="d-flex align-items-center">
+                                <div class="m-r-10">
+                                    <span class="btn btn-circle btn-lg btn-success">
+                                        <i class="fas fa-check text-white"></i>
+                                    </span>
+                                </div>
+                                <div>
+                                    รายการถอนสำเร็จวันนี้                                                                      
+                                </div>
+                                <div class="ml-auto">
+                                    <h4 class="m-b-0 font-light"><span id="tasksuccesstoday">0</span></h4>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- Card -->
+                </div>
+                <div class="card-group">
+                    <!-- Card -->
+                    <div class="card">
+                        <div class="card-body">
+                            <div class="d-flex align-items-center">
+                                <div class="m-r-10">
+                                    <span class="btn btn-circle btn-lg bg-warning">
+                                        <i class="fas fa-coins text-white"></i>
+                                    </span>
+                                </div>                             
+                                <div>
+                                    รายการถอนกำลังดำเนินการ
+                                </div>
+                                <div class="ml-auto">                                       
+                                    <h5 class="m-b-0 font-light">
+                                    <table>
+                                        <tr>
+                                            <td style="width:120px">รอแบ่งงาน(<span id="tasknew">0</span>)</td>
+                                            <td style="width:120px">ในคิวงาน(<span id="taskqueue">0</span>)</td>
+                                        </tr>
+                                        <tr>
+                                            <td>กำลังถอน(<span id="taskprocess">0</span>)</td>
+                                            <td>รอ approve(<span id="taskapprove">0</span>)</td>
+                                        </tr>
+                                    </table>
+                                    </h5>
+                                </div>                                
+                            </div>
+                        </div>
+                    </div>
+                    <!-- Card -->                   
+                    <!-- Card -->
+                    <div class="card">
+                        <div class="card-body">
+                            <div class="d-flex align-items-center">
+                                <div class="m-r-10">
+                                    <span class="btn btn-circle btn-lg bg-danger">
+                                        <i class="fas fa-times text-white"></i>
+                                    </span>
+                                </div>                             
+                                <div>
+                                    รายการถอนมีปัญหา
+                                </div>
+                                <div class="ml-auto">                                       
+                                    <h5 class="m-b-0 font-light">รอถอนมือ(<span id="taskerror">0</span>)<br>รอตรวจสอบยอดธนาคาร(<span id="taskbankerror">0</span>)</h5>
+                                </div>                                
+                            </div>
+                        </div>
+                    </div>
+                    <!-- Card -->                 
+                    <!-- Column -->
+                </div>
+                <!-- ============================================================== -->
+                <!-- Info box -->
+                <!-- ============================================================== -->
+            
+</div>                
+            <!-- ============================================================== -->
+            <!-- End Container fluid  -->
+            <!-- ============================================================== -->
+
+
+
+
+
+

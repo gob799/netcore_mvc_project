@@ -1,0 +1,68 @@
+﻿@{
+    Layout = null;
+}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Signin</title>
+    <link rel="stylesheet" href="~/lib/bootstrap/css/bootstrap.min.css" />
+    <!-- Extends  -->
+    <link rel="stylesheet" href="~/lib/customs/styleextends.min.css" />
+    <link rel="stylesheet" href="~/lib/customs/colors.min.css" />
+    <link rel="stylesheet" href="~/lib/spinners.min.css" />
+     <!-- Page  -->
+    <link rel="stylesheet" href="~/css/signin.min.css" />
+    <!--[if lt IE 9]>
+        <script src="~/lib/html5shiv.js"></script>
+        <script src="~/lib/respond.min.js"></script>
+    <![endif]-->
+</head>
+<body>
+<div class="accountbg"></div>
+        <div class="wrapper-page vertical-center">
+            <div class="card w-100">
+                <div class="card-body">
+                    <div class="loader d-none text-center" id="onloading">
+                        <p>
+                        <div class="spinner-grow blue-700" style="width: 10px; height:10px;" role="status"></div>
+                        <div class="spinner-grow blue-700" style="width: 10px; height:10px;" role="status"></div>
+                        <div class="spinner-grow blue-700" style="width: 10px; height:10px;" role="status"></div>
+                        </p>
+                        <p>Loading...</p>
+                    </div>
+                    <div class="p-3" id="loginbox">
+                        <h4 class="font-18 m-b-5 text-center">เข้าสู่ระบบ</h4>
+
+                        <form class="form-horizontal m-t-30" asp-action="SigninAc">
+                            <div class="mb-3">
+                                <label for="vpassword" class="form-label">ชื่อผู้ใช้</label>
+                                <input type="text" class="form-control" name="vusername" id="vpassword" placeholder="กรอกชื่อผู้ใช้" value="@if(Startup.Configuration["DevState"] == "true"){@Html.Raw("admin")}">
+                                <div class="invalid-feedback pl-1">ชื่อผู้ใช้ไม่ถูกต้องกรุณากรอก 3 ตัวอักษรขึ้นไป</div>
+                            </div>
+
+                            <div class="mb-3">
+                                <label for="vpassword" class="form-label">รหัสผ่าน</label>
+                                <input type="password" name="vpassword" class="form-control" placeholder="กรอกรหัสผ่าน" value="@if(Startup.Configuration["DevState"] == "true"){@Html.Raw("admin")}">
+                                <div class="invalid-feedback pl-1">กรุณากรอกรหัสผ่าน 4 ตัวอักษรขึ้นไป</div>
+                            </div>
+                            <p id="errorTxt" class="d-none text-center fs-13 red-800">errortext</p>
+                            <div class="mb-3 d-grid">
+                                <button type="submit" id="submitBtn" class="btn btn-primary btn-block">เข้าสู่ระบบ</button>
+                            </div>
+
+                        </form>
+                    </div>
+
+                </div>
+            </div>
+
+        </div>
+
+    <script src="~/lib/jquery/dist/jquery.min.js"></script>
+    <script src="~/lib/bootstrap/js/bootstrap.bundle.min.js"></script>
+    <script src="~/js/signin.min.js" asp-append-version="true"></script>
+</body>
+</html>
